@@ -2,7 +2,7 @@ from typing import List, Annotated, Optional
 from fastapi import APIRouter, HTTPException, status, Response, Depends
 from sqlalchemy import func
 from app.models.models import UserModel, PostModel, VoteModel
-from app.schemas.post import CreatePostSchema, PostResponseSchema, UpdatePostSchema
+from app.schemas.post import CreatePostSchema, BasePostResponseSchema, PostResponseSchema, UpdatePostSchema
 from app.db.database import db_dependency
 from app.utils.oauth import get_current_user
 
@@ -24,16 +24,15 @@ def getAllPosts(db: db_dependency, limit: int = 10, skip: int = 0, search: Optio
     return [{"Post": post[0], "votes": post[1]} for post in posts]
 
 
-@PostRouter.post("/", status_code=status.HTTP_201_CREATED, response_model=PostResponseSchema)
+@PostRouter.post("/", status_code=status.HTTP_201_CREATED, response_model=BasePostResponseSchema)
 def createPost(post: CreatePostSchema, db: db_dependency, current_user: Annotated[UserModel, Depends(get_current_user)]):
-    print(type(current_user))
     new_post = PostModel(owner_id=current_user.id, **post.model_dump())
     db.add(new_post)
     db.commit()
     db.refresh(new_post)
     return new_post 
 
-@PostRouter.get("/{id}", status_code=status.HTTP_200_OK, response_model=PostResponseSchema)
+@PostRouter.get("/{id}", status_code=status.HTTP_200_OK, response_model=BasePostResponseSchema)
 def getPost(id: int, db: db_dependency):
     post = (
             db.query(PostModel, func.count(VoteModel.post_id).label("Votes"))
@@ -49,7 +48,7 @@ def getPost(id: int, db: db_dependency):
     return { 'Post': post[0], "votes": post[1] }
 
 
-@PostRouter.put("/{id}", status_code=status.HTTP_202_ACCEPTED, response_model=PostResponseSchema)
+@PostRouter.put("/{id}", status_code=status.HTTP_202_ACCEPTED, response_model=BasePostResponseSchema)
 def updatePost(id: int, post: UpdatePostSchema, db: db_dependency, current_user: Annotated[UserModel, Depends(get_current_user)]):
     db_post = db.query(PostModel).filter(PostModel.id == id).first()
     if not db_post:
