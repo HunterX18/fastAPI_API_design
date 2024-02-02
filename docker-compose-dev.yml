@@ -1,0 +1,12 @@
+version: "3"
+
+services:
+  api:
+    build: .
+    ports:
+      - "8000:8000"
+    volumes:
+      - ./:/usr/src/app:ro
+    env_file:
+      - ./app/.env
+    command: python3 -m uvicorn app.main:app --host 0.0.0.0 --port 8000 --reload
