@@ -32,7 +32,7 @@ def createPost(post: CreatePostSchema, db: db_dependency, current_user: Annotate
     db.refresh(new_post)
     return new_post 
 
-@PostRouter.get("/{id}", status_code=status.HTTP_200_OK, response_model=BasePostResponseSchema)
+@PostRouter.get("/{id}", status_code=status.HTTP_200_OK, response_model=PostResponseSchema)
 def getPost(id: int, db: db_dependency):
     post = (
             db.query(PostModel, func.count(VoteModel.post_id).label("Votes"))
@@ -45,7 +45,7 @@ def getPost(id: int, db: db_dependency):
         raise HTTPException(status_code=status.HTTP_404_NOT_FOUND, detail=f"Post {id} not found")
     
     # pydantic could not convert posts to List[PostResponseSchema] for some reason, so converting manually
-    return { 'Post': post[0], "votes": post[1] }
+    return { "Post": post[0], "votes": post[1]}
 
 
 @PostRouter.put("/{id}", status_code=status.HTTP_202_ACCEPTED, response_model=BasePostResponseSchema)
