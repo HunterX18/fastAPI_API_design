@@ -23,7 +23,7 @@ app.add_middleware(
 
 @app.get("/")
 def index():
-    return { "message": "Server is finally running!" }
+    return { "message": "Hello World!" }
 
 app.include_router(AuthRouter)
 app.include_router(PostRouter)
