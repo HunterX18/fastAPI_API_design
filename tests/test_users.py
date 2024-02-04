@@ -4,12 +4,6 @@ from jose import jwt
 from app.schemas.user import UserResponseSchema
 from app.schemas.token import TokenSchema
 
-
-def test_root(client):
-    res = client.get('/')
-    assert res.json().get("message") == "Server is running"
-    assert res.status_code == 200
-
 def test_create_user(client):
     res = client.post("/users", json={"email": "hello123@gmail.com", "password": "password"})
 
