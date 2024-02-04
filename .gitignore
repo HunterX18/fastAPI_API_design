@@ -3,3 +3,4 @@ alembic
 venv
 alembic.ini
 .env
+.pytest_cache
