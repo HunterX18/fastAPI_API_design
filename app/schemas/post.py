@@ -1,6 +1,6 @@
 from pydantic import BaseModel
 from datetime import datetime
-from .user import UserResponseSchema
+from app.schemas.user import UserResponseSchema
 
 class BasePostSchema(BaseModel):
     title: str

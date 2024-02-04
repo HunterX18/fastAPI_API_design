@@ -4,10 +4,10 @@ from fastapi.middleware.cors import CORSMiddleware
 
 # from .db.init_db import init_db
 
-from .routers.post import PostRouter
-from .routers.user import UserRouter
-from .routers.auth import AuthRouter
-from .routers.vote import VoteRouter
+from app.routers.post import PostRouter
+from app.routers.user import UserRouter
+from app.routers.auth import AuthRouter
+from app.routers.vote import VoteRouter
 
 # init_db()
 
